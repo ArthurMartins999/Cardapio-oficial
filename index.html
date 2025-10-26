@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Casa da Vovó — Cardápio</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Poppins", sans-serif;
+    background: #fff6eb;
+    color: #4b2e0e;
+    line-height: 1.4;
+    overflow-x: hidden;
+  }
+  .container { max-width: 1100px; margin: 0 auto; padding: 16px; text-align: center; }
+
+  /* Cabeçalho */
+  header {
+    position: sticky;
+    top: 0;
+    background: #fff6eb;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 16px 0;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.08);
+    animation: fadeDown 0.6s ease;
+  }
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  header img.logo {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    border: 4px solid #c27630;
+    transition: transform 0.4s ease;
+  }
+  header img.logo:hover { transform: rotate(5deg) scale(1.05); }
+  header h1 { font-size: 32px; color: #4b2e0e; margin-top: 6px; }
+  header p { font-size: 16px; color: #7b5b36; }
+
+  /* Busca */
+  .controls { margin: 20px 0; animation: fadeIn 1s ease; }
+  .search input {
+    padding: 10px 16px;
+    width: 90%;
+    max-width: 400px;
+    border-radius: 25px;
+    border: 1px solid #d6b99e;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+    font-size: 15px;
+    transition: all 0.3s ease;
+  }
+  .search input:focus {
+    outline: none;
+    border-color: #c27630;
+    box-shadow: 0 0 8px rgba(194,118,48,0.4);
+  }
+
+  /* Grid */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
+    margin-top: 10px;
+    animation: fadeUp 1s ease;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .card {
+    background: #fffefc;
+    border-radius: 12px;
+    border: 1px solid #f0e0cc;
+    box-shadow: 0 4px 8px rgba(100, 60, 20, 0.06);
+    transition: all 0.3s ease;
+    padding: 16px;
+    cursor: pointer;
+  }
+  .card:hover {
+    transform: translateY(-8px) scale(1.03);
+    box-shadow: 0 12px 20px rgba(100, 60, 20, 0.25);
+  }
+  .card img {
+    width: 100%;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    opacity: 0;
+  }
+  .card img.loaded { opacity: 1; }
+  .card:hover img { transform: scale(1.05); }
+  .card-title { font-weight: 700; font-size: 18px; margin-bottom: 6px; }
+  .card-desc { font-size: 14px; color: #7b5b36; margin-bottom: 6px; }
+  .card-price { font-weight: 700; color: #c27630; font-size: 16px; }
+
+  /* Modal */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6);
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.4s ease;
+  }
+  .modal-content {
+    background: #fff6eb;
+    padding: 24px;
+    border-radius: 16px;
+    max-width: 420px;
+    width: 90%;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  }
+  .modal img {
+    width: 100%;
+    border-radius: 12px;
+    margin-bottom: 14px;
+  }
+  .modal-close {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    font-size: 22px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #c27630;
+  }
+  .modal h2 { font-size: 22px; color: #4b2e0e; margin-bottom: 10px; }
+  .modal p { font-size: 15px; color: #7b5b36; }
+  .modal .price { font-size: 18px; color: #c27630; margin-top: 10px; font-weight: bold; }
+
+  footer {
+    margin: 40px 0 20px;
+    text-align: center;
+    color: #7b5b36;
+    font-size: 14px;
+    animation: fadeUp 1.2s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  html { scroll-behavior: smooth; }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <img class="logo" src="C:\Users\arnal\Downloads\faça uma logo para Casa de Vó com uma senhora na frente segurando um bolo.jpg"
+    <h1>Casa da Vovó</h1>
+    <p>Comidinhas caseiras e amor de vó 💛</p>
+  </header>
+
+  <section class="controls">
+    <div class="search">
+      <input id="searchInput" placeholder="Pesquisar prato..." />
+    </div>
+  </section>
+
+  <main>
+    <div id="grid" class="grid"></div>
+  </main>
+
+  <footer>
+    Casa da Vovó — Cardápio oficial 💕<br>
+    Dev: Arthur Martins
+  </footer>
+</div>
+
+<!-- Modal -->
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <span id="modalClose" class="modal-close">&times;</span>
+    <img id="modalImg" src="" alt="">
+    <h2 id="modalTitle"></h2>
+    <p id="modalDesc"></p>
+    <p id="modalPrice" class="price"></p>
+  </div>
+</div>
+
+<script>
+const menu = [
+  { 
+    title: "Paçoca de Rolha", 
+    desc: "Paçoca caseira em formato de rolha, com sabor de infância.", 
+    price: 1.0, 
+    img: "https://imgs.search.brave.com/l68wqf8zsnKrNiHy9Akz6NJly2-R28upNkX0ZuGtt90/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9odHRw/Mi5tbHN0YXRpYy5j/b20vRF9OUV9OUF82/ODA0MTAtTUxVNzkz/MjcxNTUyNDNfMDky/MDI0LU8ud2VicA"
+  },
+  { 
+    title: "Bolo de Cenoura", 
+    desc: "Bolo fofinho com cobertura de chocolate da vovó.", 
+    price: 6.5, 
+    img: "https://imgs.search.brave.com/RmomoaiyeNAYZYTTfNCl8u4K6Er0UJ8z8Ai3ACH5Yhg/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9zdGF0/aWMuaXRkZy5jb20u/YnIvaW1hZ2VzLzM2/MC0yNDAvMzRiOWZi/NTg1ZDZiMjczMGFi/OTFhMzQyMmEwZTlk/NTAvYm9sby1kZS1j/ZW5vdXJhLmpwZw"
+  },
+  { 
+    title: "Café Coado", 
+    desc: "Café fresquinho coado no pano, com aroma irresistível.", 
+    price: 3.5, 
+    img: "https://imgs.search.brave.com/aKmcr5bwxTwMlZ4PbaP7MA-N4381lEth_RR8Qk88WNM/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly90cmli/dW5hZGVtaW5hcy5j/b20uYnIvY29sdW5h/cy9tYWlzdGVuZGVu/Y2lhcy93cC1jb250/ZW50L3VwbG9hZHMv/MjAyNS8wNC9jYWZl/LTEtNzUweDM3NS5q/cGc"
+  },
+  { 
+    title: "Café Expresso", 
+    desc: "Pequeno, intenso e cheio de sabor.", 
+    price: 4.0, 
+    img: "https://imgs.search.brave.com/jK5YFpJuUL4X_RWOZqxMNLEewxJKFRAjofYBuh4Hkc4/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9zdDMu/ZGVwb3NpdHBob3Rv/cy5jb20vMTAwMTY4/Ni8xNTM0NS9pLzQ1/MC9kZXBvc2l0cGhv/dG9zXzE1MzQ1ODgy/Ni1zdG9jay1waG90/by1ob3QtZXNwcmVz/c28taW4tY3VwLmpw/Zw"
+  },
+];
+
+const grid = document.getElementById("grid");
+const searchInput = document.getElementById("searchInput");
+const modal = document.getElementById("modal");
+const modalImg = document.getElementById("modalImg");
+const modalTitle = document.getElementById("modalTitle");
+const modalDesc = document.getElementById("modalDesc");
+const modalPrice = document.getElementById("modalPrice");
+const modalClose = document.getElementById("modalClose");
+
+function renderGrid() {
+  grid.innerHTML = "";
+  const q = searchInput.value.toLowerCase();
+  menu
+    .filter(item => item.title.toLowerCase().includes(q))
+    .forEach(it => {
+      const el = document.createElement("div");
+      el.className = "card";
+      const img = document.createElement("img");
+      img.src = it.img;
+      img.alt = it.title;
+      img.onload = () => img.classList.add("loaded");
+
+      el.innerHTML = `
+        <div class="card-body">
+          <div class="card-title">${it.title}</div>
+          <div class="card-desc">${it.desc}</div>
+          <div class="card-price">R$ ${it.price.toFixed(2)}</div>
+        </div>`;
+      el.insertBefore(img, el.firstChild);
+      el.addEventListener("click", () => openModal(it));
+      grid.appendChild(el);
+    });
+}
+
+function openModal(item) {
+  modalImg.src = item.img;
+  modalTitle.textContent = item.title;
+  modalDesc.textContent = item.desc;
+  modalPrice.textContent = `R$ ${item.price.toFixed(2)}`;
+  modal.style.display = "flex";
+}
+
+modalClose.addEventListener("click", () => modal.style.display = "none");
+window.addEventListener("click", e => { if (e.target === modal) modal.style.display = "none"; });
+searchInput.addEventListener("input", renderGrid);
+renderGrid();
+</script>
+</body>
+</html>
